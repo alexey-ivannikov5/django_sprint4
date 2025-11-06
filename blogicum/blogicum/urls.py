@@ -19,6 +19,9 @@ from django.contrib import admin
 from django.urls import include, path
 from .views import RegisterView
 
+handler500 = 'pages.views.server_error'
+handler404 = 'pages.views.page_not_found'
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("blog.urls")),

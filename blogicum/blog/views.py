@@ -19,7 +19,7 @@ def index(request):
         'author', 'category', 'location'
     ).annotate(
         comment_count=Count('comments')
-    ).order_by('-pub_date')[:5]
+    ).order_by('-pub_date')[:10]
 
     template = "blog/index.html"
 
@@ -32,33 +32,31 @@ def index(request):
 
 
 def post_detail(request, post_id):
-    # Проверяем, авторизован ли пользователь
     if request.user.is_authenticated:
-        # Для авторизованного пользователя ищем либо его личные посты,
-        # либо опубликованные для всех
+
         query = Q(pk=post_id) & (
-            Q(author=request.user) |
-            Q(
+            Q(author=request.user)
+            | Q(
                 is_published=True,
                 category__is_published=True,
                 pub_date__lte=timezone.now()
             )
         )
     else:
-        # Для анонимного пользователя ищем ТОЛЬКО опубликованные посты
+
         query = Q(pk=post_id) & Q(
             is_published=True,
             category__is_published=True,
             pub_date__lte=timezone.now()
         )
 
-    # Выполняем запрос с уже правильно построенным условием `query`
     post = get_object_or_404(
         Post.objects.select_related('author', 'category', 'location'),
         query
     )
 
-    comments = post.comments.filter(is_published=True).select_related('author').order_by('created_at')
+    comments = post.comments.filter(is_published=True).select_related(
+        'author').order_by('created_at')
     form = CommentForm()
 
     context = {

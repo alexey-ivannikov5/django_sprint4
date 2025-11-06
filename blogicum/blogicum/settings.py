@@ -35,7 +35,6 @@ ALLOWED_HOSTS = [
 
 INSTALLED_APPS = [
     'django_bootstrap5',
-    "core.apps.CoreConfig",
     "pages.apps.PagesConfig",
     "blog.apps.BlogConfig",
     "django.contrib.admin",
@@ -143,4 +142,4 @@ STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
+CSRF_FAILURE_VIEW = 'pages.views.csrf_failure'
