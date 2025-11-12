@@ -19,7 +19,7 @@ def index(request):
         'author', 'category', 'location'
     ).annotate(
         comment_count=Count('comments')
-    ).order_by('-pub_date')[:10]
+    ).order_by('-pub_date')
 
     template = "blog/index.html"
 
