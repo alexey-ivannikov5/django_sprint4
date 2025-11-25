@@ -6,14 +6,15 @@ from .models import Post, Comment
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'text', 'location', 'pub_date', 'category', 'image']
+        fields = ['title', 'text', 'location', 'pub_date', 'category', 'image', 'is_published']
         labels = {
             'title': 'Заголовок',
             'text': 'Текст публикации',
             'location': 'Местоположение',
             'pub_date': 'Дата публикации',
             'category': 'Категория',
-            'image': 'Изображение для поста'
+            'image': 'Изображение для поста',
+            'is_published': 'Опубликовано'
         }
         widgets = {
             'pub_date': forms.DateInput(attrs={'type': 'date'})

@@ -10,6 +10,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count, Q
 
 
+def get_page_obj(request, posts):
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page') or 1
+    return paginator.get_page(page_number)
+
 def index(request):
     posts = Post.objects.filter(
         is_published=True,
@@ -23,9 +28,7 @@ def index(request):
 
     template = "blog/index.html"
 
-    paginator = Paginator(posts, 10)
-    page_number = request.GET.get('page') or 1
-    page_obj = paginator.get_page(page_number)
+    page_obj = get_page_obj(request, posts)
 
     context = {"page_obj": page_obj}
     return render(request, template, context)
@@ -84,9 +87,7 @@ def category_posts(request, category_slug):
         comment_count=Count('comments')
     ).order_by('-pub_date')
 
-    paginator = Paginator(posts, 10)
-    page_number = request.GET.get('page') or 1
-    page_obj = paginator.get_page(page_number)
+    page_obj = get_page_obj(request, posts)
 
     template = 'blog/category.html'
     context = {
@@ -114,9 +115,7 @@ def profile(request, username):
             pub_date__lte=timezone.now()
         )
 
-    paginator = Paginator(post_list, 10)
-    page_number = request.GET.get('page') or 1
-    page_obj = paginator.get_page(page_number)
+    page_obj = get_page_obj(request, post_list)
 
     context = {
         'profile': user,
